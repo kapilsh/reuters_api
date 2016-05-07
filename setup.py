@@ -20,7 +20,8 @@ setup(
         'pytables'
     ],
     entry_points={
-        'console_scripts': []
+        'console_scripts':
+            ["reuters_download=pyreuters.bin.download:main"]
     },
     package_data={
         '': ['*.json']
