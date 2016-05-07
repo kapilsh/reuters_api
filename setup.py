@@ -17,7 +17,7 @@ setup(
     install_requires=[
         'pandas>=0.18',
         'numpy>=1.10',
-        'pytables'
+        'tables'
     ],
     entry_points={
         'console_scripts':
