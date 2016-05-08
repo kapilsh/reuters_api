@@ -3,6 +3,9 @@ from pandas.tseries.offsets import BDay
 import os
 import datetime
 import logging
+
+from tables.description import IsDescription, Float64Col, UInt64Col, UInt32Col
+
 from . import reuters_data_dir
 
 logging.basicConfig(level=logging.INFO)
@@ -70,8 +73,6 @@ def trades_data(symbol, **kargs):
     if 'path' in kargs.keys():
         path = kargs['path']
 
-    tick_data = None
-
     if date is None and path is None:
         tick_data = read_raw(symbol=symbol)
     else:
@@ -89,3 +90,19 @@ def trades_data(symbol, **kargs):
         return td
     else:
         return None
+
+
+class Quote(IsDescription):
+    file_date = UInt32Col()
+    date_time = UInt64Col()
+    bid = Float64Col()
+    ask = Float64Col()
+    bid_size = UInt32Col()
+    ask_size = UInt32Col()
+
+
+class Trade(IsDescription):
+    file_date = UInt32Col()
+    date_time = UInt64Col()
+    price = Float64Col()
+    volume = UInt32Col()
