@@ -11,8 +11,13 @@ from .. import reuters_data_dir, server_ip, remote_dir
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch = logging.StreamHandler()
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
 
     parser = argparse.ArgumentParser(
         description="Download Reuters data from the configured server",
