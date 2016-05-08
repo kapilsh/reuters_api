@@ -7,3 +7,5 @@ server_ip = "10.10.100.222"
 remote_dir = "/home/storage/csv/"
 
 reuters_data_dir = "~/dev/reuters/data"
+
+hdf5_dir = "~/dev/reuters"
