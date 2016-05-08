@@ -21,7 +21,8 @@ setup(
     ],
     entry_points={
         'console_scripts':
-            ["reuters_download=pyreuters.bin.download:main"]
+            ["reuters_download=pyreuters.bin.download:main",
+             "reuters_convert=pyreuters.bin.convert:main"]
     },
     package_data={
         '': ['*.json']

@@ -1,3 +1,5 @@
+import tables
+
 __version__ = '0.0.4'
 __package__ = 'pyreuters'
 
@@ -8,4 +10,8 @@ remote_dir = "/home/storage/csv/"
 
 reuters_data_dir = "~/dev/reuters/data"
 
+# Direct
 hdf5_dir = "~/dev/reuters"
+
+# FIlters used in H5 files
+hdf_repos_filters = tables.Filters(complevel=1, complib='zlib')
