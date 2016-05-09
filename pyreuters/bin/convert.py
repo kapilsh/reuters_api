@@ -56,7 +56,7 @@ def main():
             os.path.expanduser(hdf5_dir)
         date_match = re.compile("\\d{8}")
         dated_dirs = [x for x in os.listdir(data_path) if date_match.match(x)]
-        for dr in dated_dirs:
+        for dr in np.sort(dated_dirs):
             if options.verbose:
                 logger.info("Loading data for {}".format(dr))
             for instrument in instruments:
