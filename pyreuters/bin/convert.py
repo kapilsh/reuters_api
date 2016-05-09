@@ -120,14 +120,14 @@ def main():
                             for index, q in quotes.iterrows():
                                 row['file_date'] = int(dr)
                                 row['date_time'] = q['DateTime']
-                                row['bid'] = -1.0 if np.isnan(
-                                    q['Bid']) else float(q['Bid'])
-                                row['ask'] = -1.0 if np.isnan(
-                                    q['Ask']) else float(q['Ask'])
-                                row['bid_size'] = -1 if np.isnan(
-                                    q['BidSize']) else int(q['BidSize'])
-                                row['ask_size'] = -1.0 if np.isnan(
-                                    q['AskSize']) else int(q['AskSize'])
+                                if not np.isnan(q['Bid']):
+                                    row['bid'] = float(q['Bid'])
+                                if not np.isnan(q['Ask']):
+                                    row['ask'] = float(q['Ask'])
+                                if not np.isnan(q['BidSize']):
+                                    row['bid_size'] = int(q['BidSize'])
+                                if not np.isnan(q['AskSize']):
+                                    row['ask_size'] = int(q['AskSize'])
                                 row.append()
                         table.flush()
 
@@ -167,10 +167,10 @@ def main():
                             for index, trd in trades.iterrows():
                                 row['file_date'] = int(dr)
                                 row['date_time'] = trd['DateTime']
-                                row['volume'] = -1 if np.isnan(
-                                    trd['Volume']) else int(trd['Volume'])
-                                row['price'] = -1.0 if np.isnan(
-                                    trd['Volume']) else float(trd['Price'])
+                                if not np.isnan(trd['Volume']):
+                                    row['volume'] = int(trd['Volume'])
+                                if not np.isnan(trd['Price']):
+                                    row['price'] = float(trd['Price'])
                                 row.append()
                         table.flush()
 

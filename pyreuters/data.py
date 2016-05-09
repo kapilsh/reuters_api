@@ -1,10 +1,11 @@
 import pandas as pd
 from pandas.tseries.offsets import BDay
+import numpy as np
 import os
 import datetime
 
 from tables.description import IsDescription, Float64Col, UInt64Col, UInt32Col, \
-    Int32Col
+    Int32Col, Int64Col
 
 from . import reuters_data_dir
 
@@ -108,14 +109,14 @@ def trades_data(symbol=None, **kargs):
 class Quote(IsDescription):
     file_date = UInt32Col(dflt=0)
     date_time = UInt64Col()
-    bid = Float64Col(dflt=-1.0)
-    ask = Float64Col(dflt=-1.0)
-    bid_size = Int32Col(dflt=-1)
-    ask_size = Int32Col(dflt=-1)
+    bid = Float64Col(dflt=np.NaN)
+    ask = Float64Col(dflt=np.NaN)
+    bid_size = Int64Col(dflt=-999999)
+    ask_size = Int64Col(dflt=-999999)
 
 
 class Trade(IsDescription):
     file_date = UInt32Col(dflt=0)
     date_time = UInt64Col()
-    price = Float64Col(dflt=-1.0)
-    volume = Int32Col(dflt=-1.0)
+    price = Float64Col(dflt=np.NaN)
+    volume = Int64Col(dflt=-999999)
