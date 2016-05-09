@@ -62,8 +62,9 @@ def main():
             file_path = os.path.join(cache_dir, the_file)
             try:
                 if os.path.isfile(file_path):
-                    logger.info("Removing {} from cache directory".format(
-                        file_path))
+                    if options.verbose:
+                        logger.info("Removing {} from cache directory".format(
+                            file_path))
                     os.unlink(file_path)
             except Exception as e:
                 logger.error("Failed to delete file in cache directory with "
@@ -71,7 +72,8 @@ def main():
 
         if not os.path.exists(cache_dir):
             os.makedirs(cache_dir)
-        logger.info("Saving data to {}".format(save_dir))
+        if options.verbose:
+            logger.info("Saving data to {}".format(save_dir))
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         start_date = options.start_date if options.start_date else \
@@ -91,14 +93,14 @@ def main():
                 logger.error("Failed to parser end date. Error message - ",
                              err)
 
-        if options.verbose is True:
+        if options.verbose:
             logger.info("Connecting to server ip " + server_address)
             logger.info("Saving to " + save_dir)
             logger.info("Start date: " + start_date.strftime('%Y-%m-%d'))
             logger.info("End date: " + end_date.strftime('%Y-%m-%d'))
 
         instruments = options.instruments.split(',')
-        if options.verbose is True:
+        if options.verbose:
             logger.info("Instruments " + str(instruments))
 
         connection = None
@@ -118,7 +120,8 @@ def main():
         os.chdir(cache_dir)
 
         for dt in pd.date_range(start=start_date, end=end_date, freq='D'):
-            logger.info("Downloading data for date " + dt.strftime('%Y-%m-%d'))
+            if options.verbose:
+                logger.info("Downloading data for date " + dt.strftime('%Y-%m-%d'))
             date_dir = remote_dir + dt.strftime('%Y.%m.%d')
             with connection.cd():
                 if connection.exists(date_dir):
@@ -128,9 +131,9 @@ def main():
                         r = re.compile("\\d{4}\\.\\d{2}\\.\\d{2}\\." + inst +
                                        "(BF)*[FGHJKMNQUVXZ]\\S*\\d\\.csv\\.gz")
                         inst_files = [f for f in files if r.match(f)]
-                        logger.info("Found {0} files on the server".format(
-                            len(inst_files)))
-                        if options.verbose is True:
+                        if options.verbose:
+                            logger.info("Found {0} files on the server "
+                                        "for {}".format(len(inst_files), inst))
                             logger.info("Downloading data for " + str(inst))
                             logger.info("Found " + str(len(inst_files)) +
                                         ' files')
