@@ -1,9 +1,12 @@
 import logging
 import tables
 import datetime
+import numpy as np
 import argparse
 import os
 import re
+
+from ..data import Quote, Trade, read_raw, quotes_data, trades_data
 from .. import reuters_data_dir, hdf5_dir, hdf_repos_filters
 
 # TODO
@@ -65,7 +68,119 @@ def main():
                                                                hdf_file))
                 store = tables.open_file(hdf_file, mode='a',
                                          filters=hdf_repos_filters)
-                root = store.root
+                if not store.__contains__("/quotes"):
+                    if options.verbose:
+                        logger.info("quotes node doesn not exist in the file."
+                                    "Creating...")
+                    store.create_group("/", "quotes", "Quotes Market Data")
+                if not store.__contains__("/trades"):
+                    if options.verbose:
+                        logger.info("trades node doesn not exist in the file."
+                                    "Creating...")
+                    store.create_group("/", "trades", "Trades Market Data")
+
+                dir = os.path.join(data_path, dr)
+                date_files = np.array(os.listdir(dir))
+                reg = re.compile("\\d{4}\\.\\d{2}\\.\\d{2}\\.(" + instrument +
+                                 "(BF)*[FGHJKMNQUVXZ]\\S*\\d)\\.csv\\.gz")
+                inst_files = [x for x in date_files if reg.match(x)]
+                if options.verbose:
+                    logger.info("Found {} files for {}".format(len(inst_files),
+                                                               instrument))
+                for file in inst_files:
+                    contract = reg.match(file).group(1)
+                    table_name = contract.replace(".", "_")
+
+                    raw_data = None
+
+                    quotes_group = store.get_node("/", "quotes")
+                    if not quotes_group.__contains__(table_name):
+                        if options.verbose:
+                            logger.info(
+                                "{} table does not exist in quotes group"
+                                "Creating...".format(table_name))
+                        store.create_table(quotes_group, table_name, Quote,
+                                           "Quotes data for {}".format(
+                                               table_name))
+
+                    table = store.get_node(quotes_group, table_name)
+                    existing = np.array([str(x) for x in
+                                np.unique(table.col('file_date'))])
+                    date_exists = np.any(existing == dr)
+
+                    if not date_exists:
+                        raw_data = read_raw(symbol=contract,
+                                            date=datetime.datetime.strptime(
+                                                dr, "%Y%m%d"),
+                                            path=reuters_data_dir,
+                                            verbose=options.verbose)
+                        quotes = quotes_data(raw_data=raw_data)
+                        num_rows = len(quotes.index)
+                        if options.verbose:
+                            logger.info("Adding {} new quotes to {}".format(
+                                num_rows, hdf_file))
+                        if num_rows > 0:
+                            row = table.row
+                            quotes['DateTime'] = quotes.index.astype(np.int64)
+                            for index, q in quotes.iterrows():
+                                row['file_date'] = int(dr)
+                                row['date_time'] = q['DateTime']
+                                row['bid'] = -1.0 if np.isnan(
+                                    q['Bid']) else float(q['Bid'])
+                                row['ask'] = -1.0 if np.isnan(
+                                    q['Ask']) else float(q['Ask'])
+                                row['bid_size'] = -1 if np.isnan(
+                                    q['BidSize']) else int(q['BidSize'])
+                                row['ask_size'] = -1.0 if np.isnan(
+                                    q['AskSize']) else int(q['AskSize'])
+                                row.append()
+                        table.flush()
+
+                    trades_group = store.get_node("/", "trades")
+
+                    if not trades_group.__contains__(table_name):
+                        if options.verbose:
+                            logger.info(
+                                "{} table does not exist in the trades "
+                                "group. Creating...".format(table_name))
+                        store.create_table(trades_group, table_name, Trade,
+                                           "Trades data for {}".format(
+                                               table_name))
+
+                    table = store.get_node(trades_group, table_name)
+                    existing = np.array([str(x) for x in
+                                np.unique(table.col('file_date'))])
+                    date_exists = np.any(existing == dr)
+
+                    if not date_exists:
+                        row = table.row
+                        if raw_data is None:
+                            raw_data = read_raw(symbol=contract,
+                                                date=datetime.datetime.strptime(
+                                                    dr, "%Y%m%d"),
+                                                path=reuters_data_dir,
+                                                verbose=options.verbose)
+
+                        trades = trades_data(raw_data=raw_data)
+                        num_rows = len(trades.index)
+                        if options.verbose:
+                            logger.info("Adding {} new trades to {}".format(
+                                num_rows, hdf_file))
+                        if num_rows > 0:
+                            trades['DateTime'] = trades.index.astype(np.int64)
+                            for index, trd in trades.iterrows():
+                                row['file_date'] = int(dr)
+                                row['date_time'] = trd['DateTime']
+                                row['volume'] = -1 if np.isnan(
+                                    trd['Volume']) else int(trd['Volume'])
+                                row['price'] = -1.0 if np.isnan(
+                                    trd['Volume']) else float(trd['Price'])
+                                row.append()
+                        table.flush()
+
+                store.flush()
+                store.close()
+
 
 if __name__ == '__main__':
     main()

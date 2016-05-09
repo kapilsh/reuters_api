@@ -4,7 +4,8 @@ import os
 import datetime
 import logging
 
-from tables.description import IsDescription, Float64Col, UInt64Col, UInt32Col
+from tables.description import IsDescription, Float64Col, UInt64Col, UInt32Col, \
+    Int32Col
 
 from . import reuters_data_dir
 
@@ -33,9 +34,14 @@ def read_raw(symbol, date=pd.datetime.today() - BDay(1),
         return None
 
 
-def quotes_data(symbol, **kargs):
+def quotes_data(symbol=None, **kargs):
     date = None
     path = None
+
+    tick_data = None
+
+    if 'raw_data' in kargs.keys():
+        tick_data = kargs["raw_data"]
 
     if 'date' in kargs.keys():
         date = kargs['date']
@@ -43,16 +49,19 @@ def quotes_data(symbol, **kargs):
     if 'path' in kargs.keys():
         path = kargs['path']
 
-    if date is None and path is None:
-        tick_data = read_raw(symbol=symbol)
-    else:
-        if date is None:
-            tick_data = read_raw(symbol=symbol, path=path)
+    if tick_data is None:
+        if symbol is None:
+            return None
+        if date is None and path is None:
+            tick_data = read_raw(symbol=symbol)
         else:
-            if path is None:
-                tick_data = read_raw(symbol=symbol, date=date)
+            if date is None:
+                tick_data = read_raw(symbol=symbol, path=path)
             else:
-                tick_data = read_raw(symbol=symbol, date=date, path=path)
+                if path is None:
+                    tick_data = read_raw(symbol=symbol, date=date)
+                else:
+                    tick_data = read_raw(symbol=symbol, date=date, path=path)
 
     if tick_data is not None:
         qd = tick_data[tick_data.Type == 'Quote']
@@ -63,9 +72,14 @@ def quotes_data(symbol, **kargs):
         return None
 
 
-def trades_data(symbol, **kargs):
+def trades_data(symbol=None, **kargs):
     date = None
     path = None
+
+    tick_data = None
+
+    if 'raw_data' in kargs.keys():
+        tick_data = kargs["raw_data"]
 
     if 'date' in kargs.keys():
         date = kargs['date']
@@ -73,16 +87,19 @@ def trades_data(symbol, **kargs):
     if 'path' in kargs.keys():
         path = kargs['path']
 
-    if date is None and path is None:
-        tick_data = read_raw(symbol=symbol)
-    else:
-        if date is None:
-            tick_data = read_raw(symbol=symbol, path=path)
+    if tick_data is None:
+        if symbol is None:
+            return None
+        if date is None and path is None:
+            tick_data = read_raw(symbol=symbol)
         else:
-            if path is None:
-                tick_data = read_raw(symbol=symbol, date=date)
+            if date is None:
+                tick_data = read_raw(symbol=symbol, path=path)
             else:
-                tick_data = read_raw(symbol=symbol, date=date, path=path)
+                if path is None:
+                    tick_data = read_raw(symbol=symbol, date=date)
+                else:
+                    tick_data = read_raw(symbol=symbol, date=date, path=path)
 
     if tick_data is not None:
         td = tick_data[tick_data.Type == 'Trade']
@@ -93,16 +110,16 @@ def trades_data(symbol, **kargs):
 
 
 class Quote(IsDescription):
-    file_date = UInt32Col()
+    file_date = UInt32Col(dflt=0)
     date_time = UInt64Col()
-    bid = Float64Col()
-    ask = Float64Col()
-    bid_size = UInt32Col()
-    ask_size = UInt32Col()
+    bid = Float64Col(dflt=-1.0)
+    ask = Float64Col(dflt=-1.0)
+    bid_size = Int32Col(dflt=-1)
+    ask_size = Int32Col(dflt=-1)
 
 
 class Trade(IsDescription):
-    file_date = UInt32Col()
+    file_date = UInt32Col(dflt=0)
     date_time = UInt64Col()
-    price = Float64Col()
-    volume = UInt32Col()
+    price = Float64Col(dflt=-1.0)
+    volume = Int32Col(dflt=-1.0)
