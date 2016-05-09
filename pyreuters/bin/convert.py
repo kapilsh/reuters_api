@@ -113,7 +113,8 @@ def main():
                                             date=datetime.datetime.strptime(
                                                 dr, "%Y%m%d"),
                                             path=reuters_data_dir,
-                                            verbose=options.verbose)
+                                            verbose=options.verbose,
+                                            logger=logger)
                         quotes = quotes_data(raw_data=raw_data)
                         num_rows = len(quotes.index)
                         if options.verbose:
@@ -159,7 +160,8 @@ def main():
                                                 date=datetime.datetime.strptime(
                                                     dr, "%Y%m%d"),
                                                 path=reuters_data_dir,
-                                                verbose=options.verbose)
+                                                verbose=options.verbose,
+                                                logger=logger)
 
                         trades = trades_data(raw_data=raw_data)
                         num_rows = len(trades.index)

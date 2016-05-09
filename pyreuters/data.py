@@ -9,12 +9,9 @@ from tables.description import IsDescription, Float64Col, UInt64Col, UInt32Col, 
 
 from . import reuters_data_dir
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 def read_raw(symbol, date=pd.datetime.today() - BDay(1),
-             path=reuters_data_dir, verbose=False):
+             path=reuters_data_dir, verbose=False, logger=None):
     if isinstance(date, str):
         date = datetime.datetime.strptime(date, '%Y-%m-%d')
     if isinstance(path, str):
