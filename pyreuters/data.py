@@ -2,7 +2,6 @@ import pandas as pd
 from pandas.tseries.offsets import BDay
 import os
 import datetime
-import logging
 
 from tables.description import IsDescription, Float64Col, UInt64Col, UInt32Col, \
     Int32Col

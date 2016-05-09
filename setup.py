@@ -17,7 +17,8 @@ setup(
     install_requires=[
         'pandas>=0.18',
         'numpy>=1.10',
-        'tables'
+        'tables',
+        'pysftp'
     ],
     entry_points={
         'console_scripts':
