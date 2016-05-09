@@ -9,12 +9,6 @@ import re
 from ..data import Quote, Trade, read_raw, quotes_data, trades_data
 from .. import reuters_data_dir, hdf5_dir, hdf_repos_filters
 
-# TODO
-# load all the filenames for a date
-# check the if the combination of symbol and file_date exists
-# if not then read quotes and trades
-# insert quotes and trades
-
 
 def main():
     logger = logging.getLogger(__name__)
