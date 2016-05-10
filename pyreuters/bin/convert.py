@@ -91,7 +91,7 @@ def main():
                     if not quotes_group.__contains__(table_name):
                         if options.verbose:
                             logger.info(
-                                "{} table does not exist in quotes group"
+                                "{} table does not exist in quotes group. "
                                 "Creating...".format(table_name))
                         store.create_table(quotes_group, table_name, Quote,
                                            "Quotes data for {}".format(
