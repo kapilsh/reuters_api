@@ -1,5 +1,4 @@
-"""pyreuters package to read and store Reuters market data
-  .. moduleauthor:: Kapil Sharma <kapil.github@gmail.com>
+"""pyreuters package to read and store Reuters market data.
 """
 
 import tables
