@@ -25,6 +25,8 @@ def main():
                "-u ksharma -p *******")
     parser.add_argument("-v", "--verbose", help="Verbose output",
                         action='store_true', dest='verbose')
+    parser.add_argument("-n", "--network_ip", help="IP address of the server",
+                        type=str, dest='network_ip', default=server_ip)
     parser.add_argument("-u", "--username",
                         help="Username to connect to reuters data server",
                         action="store", type=str, dest="username")
@@ -53,7 +55,7 @@ def main():
             logger.error("Missing required arguments")
         parser.print_help()
     else:
-        server_address = server_ip
+        server_address = server_ip if options.network_ip else options.network_ip
         save_dir = options.dir if options.dir else \
             os.path.expanduser(reuters_data_dir)
         cache_dir = os.path.abspath(os.path.join(save_dir, "../cache"))
