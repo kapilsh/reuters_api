@@ -1,0 +1,10 @@
+{
+  "local_machine": {
+    "reuters_data_dir": "~/dev/reuters/data",
+    "hdf5_dir": "~/dev/reuters"
+  },
+  "server": {
+    "server_ip": "10.10.100.222",
+    "server_dir": "/home/storage/csv/"
+  }
+}
