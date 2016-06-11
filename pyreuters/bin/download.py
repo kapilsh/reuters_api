@@ -132,7 +132,7 @@ def main():
                                        "(BF)*[FGHJKMNQUVXZ]\\S*\\d\\.csv\\.gz")
                         inst_files = [f for f in files if r.match(f)]
                         if options.verbose:
-                            logger.info("Found {0} files on the server "
+                            logger.info("Found {} files on the server "
                                         "for {}".format(len(inst_files), inst))
                             logger.info("Downloading data for " + str(inst))
                             logger.info("Found " + str(len(inst_files)) +
