@@ -19,7 +19,7 @@ for symbols
 - [x]  Functions to read raw market data file, quotes and trades
 - [x]  Functions to clean quotes and trades data
 - [x]  `Symbol` API to load market data for a particular symbol, and merge quotes and trades data
-- [ ] Comprehensive documentation
+- [x] Comprehensive documentation
 
 -------------------------
 
@@ -276,8 +276,31 @@ In[5]: trades = clean.clean_trades(trades)
 Removed 5 zero priced trades
 
 ```
+-------------------------
 
 ### Symbol API
+
+`pyreuters.symbol` API provides a `class` `Symbol` that loads market data from known hdf5 data files.
+
+`Symbol` class takes a `symbol` such as `NG` as an argument. `exchange` can also be provided in case data is saved as `CME_NG.h5`. This links directly to the `exchange` argument to `reuters_convert`
+
+Market data is saved in `dict` `quotes` and `trades` where keys are different contracts
+
+- `pyreuters.symbol.Symbol.load(start_time, end_time)` : Loads data between `start_time` and `end_time` with `start_time` inclusive
+- `pyreuters.symbol.Symbol.load_contract(contract, start_time, end_time)` : Loads data between `start_time` and `end_time` for a specific contract
+- `pyreuters.symbol.Symbol.loaded_contracts(data_type='Quote')` : All the contracts that have been loaded in `quotes` and `trades`
+- `pyreuters.symbol.Symbol.merge_qt()` : Merges `quotes` and `trades` and save it in `quotes` dictionary
+- `pyreuters.symbol.Symbol.get_quotes(contract)` : Helper function to get `quotes` for a particular contract
+- `pyreuters.symbol.Symbol.get_trades(contract)` : Helper function to get `trades` for a particular contract
+- `pyreuters.symbol.Symbol.available(hdf_file)` : Static function that gives all available contracts in a particular hdf5 file
+
+
+
+
+
+###### Example
+
+For the following example, I will assume that I have saved `NGZ6` data in `CME_NG.h5`
 
 ```
 
