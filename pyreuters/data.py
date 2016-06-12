@@ -14,12 +14,13 @@ def read_raw(symbol, date=pd.datetime.today() - BDay(1),
              path=reuters_data_dir, verbose=False, logger=None):
     if isinstance(date, str):
         date = datetime.datetime.strptime(date, '%Y-%m-%d')
-    if isinstance(path, str):
-        path = os.path.expanduser(path)
+
+    path = os.path.expanduser(path)
+
     date_dir = os.path.join(path, date.strftime('%Y%m%d'))
     to_read = os.path.join(date_dir, date.strftime("%Y.%m.%d") + '.' +
                            symbol + ".csv.gz")
-    if verbose:
+    if verbose and logger is not None:
         logger.info("Reading market data file - {}".format(to_read))
     if os.path.exists(to_read):
         rd = pd.read_csv(to_read, compression='gzip')
