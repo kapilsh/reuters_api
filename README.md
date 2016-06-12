@@ -23,6 +23,16 @@ for symbols
 
 -------------------------
 
+### Installation
+
+Navigate to the root directory of the package - the directory that has `setup.py`
+
+```
+$ python setup.py install
+```
+
+-------------------------
+
 ### Command Line Tools
 
 ###### reuters_download
@@ -339,7 +349,7 @@ Out[5]:
 2016-01-04 06:59:59.705784064-06:00  NaN       NaN  2.760       3.0
 
 In[6]: ng.trades["NGZ6"].head(10)
-Out[7]:
+Out[6]:
                                      price  volume
 2016-01-03 17:07:07.609774080-06:00  2.775     1.0
 2016-01-03 17:07:11.469128960-06:00  2.775     1.0
