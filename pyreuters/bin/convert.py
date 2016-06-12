@@ -5,9 +5,10 @@ import numpy as np
 import argparse
 import os
 import re
+import json
 
 from ..data import Quote, Trade, read_raw, quotes_data, trades_data
-from .. import reuters_data_dir, hdf5_dir, hdf_repos_filters
+from .. import reuters_data_dir, hdf5_dir, hdf_repos_filters, symbols
 
 
 def main():
@@ -26,9 +27,16 @@ def main():
                         help="Verbose output for the conversion",
                         action='store_true', default=False, dest='verbose')
     parser.add_argument("-i", "--instruments",
-                        help="Instruments to be comnverted to hdf5"
+                        help="Instruments to be converted to hdf5"
                         "separate instruments by ,",
                         action="store", type=str, dest="instruments")
+    parser.add_argument("-k", "--keep_ric",
+                        help="Keep the RIC symbol as hdf5 filename",
+                        action="store_true", dest="keep_ric")
+    parser.add_argument("-s", "--symbols",
+                        help="json config file for symbols."
+                             " Overrides the package symbols config",
+                        action="store", type=str, dest="symbols")
     parser.add_argument("-r", "--raw_path",
                         help="Path with dated folders for tick data",
                         action="store", type=str, dest="data_path")
@@ -56,7 +64,17 @@ def main():
             for instrument in instruments:
                 if options.verbose:
                     logger.info("Converting data for {}".format(instrument))
-                hdf_file = os.path.join(dest_path, "{}.h5".format(instrument))
+
+                replace_symbols = symbols
+
+                if options.symbols:
+                    with open(options.config) as data_file:
+                        replace_symbols = json.load(data_file)
+
+                hdf_file = "{}.h5".format(replace_symbols[instrument])
+                if options.keep_ric:
+                    hdf_file = "{}.h5".format(instrument)
+                hdf_file = os.path.join(dest_path, hdf_file)
                 if options.verbose:
                     logger.info("HDF5 File for {} : {}".format(instrument,
                                                                hdf_file))
@@ -81,8 +99,8 @@ def main():
                 if options.verbose:
                     logger.info("Found {} files for {}".format(len(inst_files),
                                                                instrument))
-                for file in inst_files:
-                    contract = reg.match(file).group(1)
+                for f in inst_files:
+                    contract = reg.match(f).group(1)
                     table_name = contract.replace(".", "_")
 
                     raw_data = None
