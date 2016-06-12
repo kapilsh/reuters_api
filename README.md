@@ -10,6 +10,8 @@ Release v1.0.0: v1.0.0. would be a major release.
 
 It would be one and only feature release. No new features will be added afterwards. Later versions will only be bug fixes.
 
+-------------------------
+
 ### Features
 
 - [x] Command line tools to download data, convert to hdf5 and search remote server
@@ -117,6 +119,8 @@ optional arguments:
 Example : reuters_search -d 20160104 -v -u ksharma -p ******* -g NG
 
 ```
+-------------------------
+
 ### Reading Raw Data
 
 ```
@@ -160,6 +164,7 @@ Out[4]:
 DateTime
 2016-01-03 23:08:03.323453    NaN     1.0
 ```
+-------------------------
 
 ### Configuration
 
