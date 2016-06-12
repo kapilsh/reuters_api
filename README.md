@@ -20,6 +20,8 @@ for symbols
 - [ ]  Functions to clean quotes and trades data
 - [ ]  `Symbol` API to load market data for a particular symbol, and merge quotes and trades data
 
+-------------------------
+
 ### Command Line Tools
 
 ###### reuters_download
