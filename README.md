@@ -133,9 +133,9 @@ Example : reuters_search -d 20160104 -v -u ksharma -p ******* -g NG
 
 
 ```
-In[1] import pyreuters.data as reuters
+In[1]: import pyreuters.data as reuters
 
-In[2] reuters.read_raw("NGQ6", "2016-01-03")[:1]
+In[2]: reuters.read_raw("NGQ6", "2016-01-03")[:1]
 Out[2]:
                             #RIC      Date[G]          Time[G]  GMT Offset  \
 DateTime
@@ -159,7 +159,7 @@ DateTime
 ```
 
 ```
-In[3] reuters.quotes_data(symbol="NGQ6", date="2016-01-03")[:1]
+In[3]: reuters.quotes_data(symbol="NGQ6", date="2016-01-03")[:1]
 Out[3]:
                             Bid  BidSize    Ask  AskSize
 DateTime
@@ -258,10 +258,10 @@ Similar to `clean_quotes`, these functions are wrapped in a `Python` `dictionary
 ###### Examples
 
 ```
-In[1] import pyreuters.data as reuters
+In[1]: import pyreuters.data as reuters
       import pyreuters.clean as clean
 
-In[2] quotes = reuters.quotes_data(symbol="NGQ6", date="2016-01-03")
+In[2]: quotes = reuters.quotes_data(symbol="NGQ6", date="2016-01-03")
 
 In[3] quotes = clean.clean_quotes(quotes)
 Removed 0 zero quotes
@@ -269,9 +269,136 @@ Removed 1 erroneous quotes
 Removed 18 outliers
 Removed 804 large spread quotes
 
-In[4] trades = reuters.trades_data(symbol="NGQ6", date="2016-01-03")
+In[4]: trades = reuters.trades_data(symbol="NGQ6", date="2016-01-03")
 
-In[5] trades = clean.clean_trades(trades)
+In[5]: trades = clean.clean_trades(trades)
 Removed 5 zero priced trades
+
+```
+
+### Symbol API
+
+```
+
+In[1]: from pyreuters.symbol import Symbol
+
+In[3]: ng = Symbol("NG", exchange="CME")
+
+In[3]: ng.load(start_time="2016-01-03 17:00:00", end_time="2016-01-04 07:00:00")
+
+In[4]: ng.quotes["NGZ6"].head(10)
+Out[4]:
+                                       bid  bid_size    ask  ask_size
+2016-01-03 17:00:01.435565056-06:00  2.698       1.0    NaN       NaN
+2016-01-03 17:00:01.443333888-06:00  2.711       1.0    NaN       NaN
+2016-01-03 17:00:01.466745088-06:00  2.698       1.0    NaN       NaN
+2016-01-03 17:00:01.466745088-06:00  2.709       1.0    NaN       NaN
+2016-01-03 17:00:01.466757120-06:00    NaN       NaN  2.829       1.0
+2016-01-03 17:00:01.481402112-06:00    NaN       NaN  2.813       1.0
+2016-01-03 17:00:01.487341056-06:00    NaN       NaN  2.813       2.0
+2016-01-03 17:00:01.499045888-06:00  2.711       1.0    NaN       NaN
+2016-01-03 17:00:01.508812032-06:00  2.698       1.0    NaN       NaN
+2016-01-03 17:00:01.508812032-06:00  2.709       1.0    NaN       NaN
+
+In[5]: ng.quotes["NGZ6"].tail(10)
+Out[5]:
+                                     bid  bid_size    ask  ask_size
+2016-01-04 06:59:59.263430912-06:00  NaN       NaN  2.761       2.0
+2016-01-04 06:59:59.263460096-06:00  NaN       NaN  2.760       1.0
+2016-01-04 06:59:59.263460096-06:00  NaN       NaN  2.760       2.0
+2016-01-04 06:59:59.273178112-06:00  NaN       NaN  2.760       1.0
+2016-01-04 06:59:59.273178112-06:00  NaN       NaN  2.761       4.0
+2016-01-04 06:59:59.273178112-06:00  NaN       NaN  2.761       5.0
+2016-01-04 06:59:59.273178112-06:00  NaN       NaN  2.761       4.0
+2016-01-04 06:59:59.692164096-06:00  NaN       NaN  2.760       1.0
+2016-01-04 06:59:59.705784064-06:00  NaN       NaN  2.760       2.0
+2016-01-04 06:59:59.705784064-06:00  NaN       NaN  2.760       3.0
+
+In[6]: ng.trades["NGZ6"].head(10)
+Out[7]:
+                                     price  volume
+2016-01-03 17:07:07.609774080-06:00  2.775     1.0
+2016-01-03 17:07:11.469128960-06:00  2.775     1.0
+2016-01-03 17:07:11.469140992-06:00  2.775     3.0
+2016-01-03 17:07:16.374342912-06:00  2.775     1.0
+2016-01-03 17:07:18.888011008-06:00  2.775     1.0
+2016-01-03 17:07:30.113586944-06:00  2.775     2.0
+2016-01-03 17:07:33.810831104-06:00  2.775     2.0
+2016-01-03 17:07:35.088183040-06:00  2.775     4.0
+2016-01-03 17:08:36.860453120-06:00  2.775     1.0
+2016-01-03 17:08:40.223708928-06:00  2.775     5.0
+
+In[7]: ng.merge_qt()
+Out[7]: <pyreuters.symbol.Symbol at 0x111a2fe50>
+
+In[8]: ng.quotes["NGZ6"].head(10)
+Out[8]:
+                                       ask  ask_size    bid  bid_size  price  volume
+2016-01-03 17:00:01.435565056-06:00    NaN       NaN  2.698       1.0    NaN     NaN
+2016-01-03 17:00:01.443333888-06:00    NaN       NaN  2.711       1.0    NaN     NaN
+2016-01-03 17:00:01.466745088-06:00    NaN       NaN  2.698       1.0    NaN     NaN
+2016-01-03 17:00:01.466745088-06:00    NaN       NaN  2.709       1.0    NaN     NaN
+2016-01-03 17:00:01.466757120-06:00  2.829       1.0    NaN       NaN    NaN     NaN
+2016-01-03 17:00:01.481402112-06:00  2.813       1.0    NaN       NaN    NaN     NaN
+2016-01-03 17:00:01.487341056-06:00  2.813       2.0    NaN       NaN    NaN     NaN
+2016-01-03 17:00:01.499045888-06:00    NaN       NaN  2.711       1.0    NaN     NaN
+2016-01-03 17:00:01.508812032-06:00    NaN       NaN  2.698       1.0    NaN     NaN
+2016-01-03 17:00:01.508812032-06:00    NaN       NaN  2.709       1.0    NaN     NaN
+
+In[9]: ngz6 = ng.quotes["NGZ6"]
+
+In[10]: ngz6[ngz6["price"].notnull()].head(10)
+Out[10]:
+                                       ask  ask_size    bid  bid_size  price  volume
+2016-01-03 17:07:07.609774080-06:00    NaN       NaN  2.775      14.0  2.775     1.0
+2016-01-03 17:07:11.469128960-06:00    NaN       NaN  2.775      13.0  2.775     1.0
+2016-01-03 17:07:11.469140992-06:00    NaN       NaN  2.775      10.0  2.775     3.0
+2016-01-03 17:07:11.469140992-06:00  2.787       5.0    NaN       NaN  2.775     3.0
+2016-01-03 17:07:11.469140992-06:00  2.787       6.0    NaN       NaN  2.775     3.0
+2016-01-03 17:07:16.374342912-06:00    NaN       NaN  2.775       9.0  2.775     1.0
+2016-01-03 17:07:18.888011008-06:00    NaN       NaN  2.775       8.0  2.775     1.0
+2016-01-03 17:07:30.113586944-06:00    NaN       NaN  2.775       6.0  2.775     2.0
+2016-01-03 17:07:33.810831104-06:00    NaN       NaN  2.775       4.0  2.775     2.0
+2016-01-03 17:07:35.088183040-06:00    NaN       NaN  2.770       6.0  2.775     4.0
+
+In[11]: h5_file = ng.hdf5_file
+
+In[12]: Symbol.available(h5_file)
+Out[12]:
+{
+    'Quote': ['NGZ6'],
+    'Trade': ['NGZ6']
+}
+
+In[12]: ng.loaded_contracts()
+Out[12]: ['NGZ6']
+
+In[13]: ng.get_quotes("NGZ6")[:10]
+Out[13]:
+                                       ask  ask_size    bid  bid_size  price  volume
+2016-01-03 17:00:01.435565056-06:00    NaN       NaN  2.698       1.0    NaN     NaN
+2016-01-03 17:00:01.443333888-06:00    NaN       NaN  2.711       1.0    NaN     NaN
+2016-01-03 17:00:01.466745088-06:00    NaN       NaN  2.698       1.0    NaN     NaN
+2016-01-03 17:00:01.466745088-06:00    NaN       NaN  2.709       1.0    NaN     NaN
+2016-01-03 17:00:01.466757120-06:00  2.829       1.0    NaN       NaN    NaN     NaN
+2016-01-03 17:00:01.481402112-06:00  2.813       1.0    NaN       NaN    NaN     NaN
+2016-01-03 17:00:01.487341056-06:00  2.813       2.0    NaN       NaN    NaN     NaN
+2016-01-03 17:00:01.499045888-06:00    NaN       NaN  2.711       1.0    NaN     NaN
+2016-01-03 17:00:01.508812032-06:00    NaN       NaN  2.698       1.0    NaN     NaN
+2016-01-03 17:00:01.508812032-06:00    NaN       NaN  2.709       1.0    NaN     NaN
+
+In[14]: ng.get_trades("NGZ6")[:10]
+Out[14]:
+                                     price  volume
+2016-01-03 17:07:07.609774080-06:00  2.775     1.0
+2016-01-03 17:07:11.469128960-06:00  2.775     1.0
+2016-01-03 17:07:11.469140992-06:00  2.775     3.0
+2016-01-03 17:07:16.374342912-06:00  2.775     1.0
+2016-01-03 17:07:18.888011008-06:00  2.775     1.0
+2016-01-03 17:07:30.113586944-06:00  2.775     2.0
+2016-01-03 17:07:33.810831104-06:00  2.775     2.0
+2016-01-03 17:07:35.088183040-06:00  2.775     4.0
+2016-01-03 17:08:36.860453120-06:00  2.775     1.0
+2016-01-03 17:08:40.223708928-06:00  2.775     5.0
 
 ```

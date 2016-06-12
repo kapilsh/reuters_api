@@ -5,7 +5,7 @@ import tables
 import json
 from pkg_resources import resource_filename
 
-__version__ = '0.0.17'
+__version__ = '0.1.0'
 __package__ = 'pyreuters'
 
 
