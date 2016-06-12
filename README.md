@@ -26,9 +26,9 @@ for symbols
 
 ###### reuters_download
 
-`
+```
 $ reuters_download --help
-`
+```
 
 ```
 
@@ -63,9 +63,9 @@ Example : reuters_download -i ED -s 20160101 -e 20160104 -v -u ksharma -p
 
 ###### reuters_convert
 
-`
+```
 $ reuters_convert --help
-`
+```
 
 ```
 usage: reuters_convert [-h] [-v] [-i INSTRUMENTS] [-k] [-s SYMBOLS]
@@ -96,9 +96,9 @@ Example : reuters_convert -i ED
 
 ###### reuters_search
 
-`
+```
 $ reuters_search --help
-`
+```
 
 ```
 usage: reuters_search [-h] [-v] [-n NETWORK_IP] -u USERNAME -p PASSWORD
