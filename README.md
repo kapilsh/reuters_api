@@ -125,6 +125,13 @@ Example : reuters_search -d 20160104 -v -u ksharma -p ******* -g NG
 
 ### Reading Raw Data
 
+`pyreuters.data` module provides functions to read the raw reuters tick data files and filter out quotes or trades
+
+- `read_raw`
+- `quotes_data`
+- `trades_data`
+
+
 ```
 In[1] import pyreuters.data as reuters
 
@@ -209,4 +216,62 @@ Allows user to save symbol specific market data files with actual exchange symbo
   "ED": "GE",
   "GE": "GE"
 }
+```
+-------------------------
+
+### Cleaning
+
+`pyreuters.clean` provides functions to clean market data using some helper functions. Cleaning can be done using wrapper functions `clean_quotes` and `clean_trades` or individual functions can be called separately.
+
+###### clean_quotes
+
+`clean_quotes` calls below functions from within:
+
+- `pyreuters.clean.rm_erroneous_quotes`
+- `pyreuters.clean.rm_large_spreads`
+- `pyreuters.clean.rm_quote_outliers` - with `filter_type` = `standard` or `advanced`
+- `pyreuters.clean.no_zero_quotes`
+
+These functions are wrapped in a `Python` `dictionary` and all functions in the dictionary are called by default in `clean_quotes`
+
+```
+{
+    'error_quotes': <function pyreuters.clean.rm_erroneous_quotes>,
+    'large_spreads': <function pyreuters.clean.rm_large_spreads>,
+    'outliers': <function pyreuters.clean.rm_quote_outliers>,
+    'zero_quotes': <function pyreuters.clean.no_zero_quotes>
+}
+```
+
+###### clean_trades
+
+`clean_trades` calls below functions from within:
+
+- `pyreuters.clean.no_zero_prices`
+
+Similar to `clean_quotes`, these functions are wrapped in a `Python` `dictionary` and all functions in the dictionary are called by default in `clean_trades`
+
+```
+{'zero_prices': <function pyreuters.clean.no_zero_prices>}
+```
+
+###### Examples
+
+```
+In[1] import pyreuters.data as reuters
+      import pyreuters.clean as clean
+
+In[2] quotes = reuters.quotes_data(symbol="NGQ6", date="2016-01-03")
+
+In[3] quotes = clean.clean_quotes(quotes)
+Removed 0 zero quotes
+Removed 1 erroneous quotes
+Removed 18 outliers
+Removed 804 large spread quotes
+
+In[4] trades = reuters.trades_data(symbol="NGQ6", date="2016-01-03")
+
+In[5] trades = clean.clean_trades(trades)
+Removed 5 zero priced trades
+
 ```
