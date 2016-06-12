@@ -18,7 +18,8 @@ setup(
         'pandas>=0.18',
         'numpy>=1.10',
         'tables',
-        'pysftp'
+        'pysftp',
+        'statsmodels'
     ],
     entry_points={
         'console_scripts':
