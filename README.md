@@ -117,4 +117,77 @@ optional arguments:
 Example : reuters_search -d 20160104 -v -u ksharma -p ******* -g NG
 
 ```
+### Reading Raw Data
 
+```
+In[1] import pyreuters.data as reuters
+
+In[2] reuters.read_raw("NGQ6", "2016-01-03")[:1]
+Out[2]:
+                            #RIC      Date[G]          Time[G]  GMT Offset  \
+DateTime
+2016-01-03 17:00:04.259805  NGQ6  03-JAN-2016  17:00:04.259805          -5
+
+                                  Type  Price  Volume  Bid Price  Bid Size  \
+DateTime
+2016-01-03 17:00:04.259805  Correction    0.0     NaN        NaN       NaN
+
+                            Ask Price  Ask Size  \
+DateTime
+2016-01-03 17:00:04.259805        NaN       NaN
+
+                                                                   Qualifiers  \
+DateTime
+2016-01-03 17:00:04.259805    [CLSRNGTP];   [IRGCOND];   [MKT_ST_IND];  [O...
+
+                            New Price  New Vol
+DateTime
+2016-01-03 17:00:04.259805        NaN      NaN
+```
+
+```
+In[3] reuters.quotes_data(symbol="NGQ6", date="2016-01-03")[:1]
+Out[3]:
+                            Bid  BidSize    Ask  AskSize
+DateTime
+2016-01-03 20:00:31.929364  NaN      NaN  2.594      1.0
+```
+
+```
+In[4]: reuters.trades_data(symbol="NGQ6", date="2016-01-03")[:1]
+Out[4]:
+                            Price  Volume
+DateTime
+2016-01-03 23:08:03.323453    NaN     1.0
+```
+
+### Configuration
+
+###### server_config.json
+
+```
+{
+  "local_machine": {
+    "reuters_data_dir": "~/dev/reuters/data",
+    "hdf5_dir": "~/dev/reuters"
+  },
+  "server": {
+    "server_ip": "10.10.100.222",
+    "server_dir": "/home/storage/csv/"
+  }
+}
+```
+
+###### symbols.json
+
+```
+{
+  "NG": "NG",
+  "CL": "CL",
+  "HO": "HO",
+  "NTG": "NN",
+  "BZZ": "BZ",
+  "ED": "GE",
+  "GE": "GE"
+}
+```
