@@ -69,7 +69,7 @@ $ reuters_convert --help
 
 ```
 usage: reuters_convert [-h] [-v] [-i INSTRUMENTS] [-k] [-s SYMBOLS]
-                       [-e EXCHANGE] [-r DATA_PATH] [-d DEST_PATH]
+                       [-e EXCHANGE] [-c] [-r DATA_PATH] [-d DEST_PATH]
 
 Convert the raw data files into hdf5 format
 
@@ -85,13 +85,13 @@ optional arguments:
                         symbols config
   -e EXCHANGE, --exchange EXCHANGE
                         Add exchange acronym in hdf5 filename
+  -c, --clean           Clean the market data before saving
   -r DATA_PATH, --raw_path DATA_PATH
                         Path with dated folders for tick data
   -d DEST_PATH, --destination DEST_PATH
                         Destination directory
 
 Example : reuters_convert -i ED
-
 ```
 
 ###### reuters_search
