@@ -36,12 +36,12 @@ def check_quotes(quotes):
 def clean_quotes(quotes,
                  how=("zero_quotes", "error_quotes",
                       "outliers", "large_spreads")):
-    [x(quotes) for x in how]
+    [clean_quote_funcs[x](quotes) for x in how]
     return quotes
 
 
-def clean_trades(trades, how="zero_prices"):
-    [x(trades) for x in list(how)]
+def clean_trades(trades, how=tuple(["zero_prices"])):
+    [clean_trade_funcs[x](trades) for x in list(how)]
     return trades
 
 
@@ -73,7 +73,7 @@ def __non_zero_price(row):
                np.isnan(row.Price) or np.isnan(row.Volume))
 
 
-def rm_large_spreads(quotes, func=np.median, mult=50, verbose=False):
+def rm_large_spreads(quotes, func=np.median, mult=50):
     __check_quotes__(quotes)
     temp = quotes.ffill()
     original_count = len(quotes.index)
@@ -87,19 +87,19 @@ def rm_large_spreads(quotes, func=np.median, mult=50, verbose=False):
 
 
 def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
-                      filter_type='advanced'):
+                      filter_type='standard'):
     __check_quotes__(quotes)
     original_count = len(quotes.index)
     cleaned_qd = quotes
     if original_count > window:
-        window = np.floor(window/2) * 2
+        window = int(np.floor(window/2) * 2)
         temp = quotes.ffill().bfill()
         mid_quotes = (temp.Bid + temp.Ask)/2
         mq_mad = mad(mid_quotes, center=center)
         if mq_mad == 0:
             m = mid_quotes
-            s = np.append([True],
-                          (m[1:len(m)].values - m[0:(len(m)-1)].values) != 0)
+            s = np.append(
+                [True], (m[1:len(m)].values - m[0:(len(m)-1)].values) != 0)
             mq_mad = mad(mid_quotes[s])
 
         def __modified_median__(arr):
@@ -107,8 +107,8 @@ def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
             return np.median(np.append(arr[0:(w-1)/2], arr[(w/2 + 1):w]))
 
         roll_meds = None
-        meds = pd.rolling_apply(mid_quotes, window=window + 1,
-                                func=__modified_median__, center=True)
+        meds = mid_quotes.rolling(
+            window=window + 1, center=True).apply(__modified_median__)
 
         if filter_type == 'standard':
             roll_meds = meds.ffill().bfill()
@@ -166,7 +166,7 @@ def rm_erroneous_quotes(quotes):
     return quotes
 
 clean_quote_funcs = {
-    "zero_quotes": no_zero_prices,
+    "zero_quotes": no_zero_quotes,
     "error_quotes": rm_erroneous_quotes,
     "outliers": rm_quote_outliers,
     "large_spreads": rm_large_spreads
