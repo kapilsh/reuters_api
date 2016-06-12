@@ -37,6 +37,9 @@ def main():
                         help="json config file for symbols."
                              " Overrides the package symbols config",
                         action="store", type=str, dest="symbols")
+    parser.add_argument("-e", "--exchange",
+                        help="Add exchange acronym in hdf5 filename",
+                        action="store", type=str, dest="exchange")
     parser.add_argument("-r", "--raw_path",
                         help="Path with dated folders for tick data",
                         action="store", type=str, dest="data_path")
@@ -74,7 +77,12 @@ def main():
                 hdf_file = "{}.h5".format(replace_symbols[instrument])
                 if options.keep_ric:
                     hdf_file = "{}.h5".format(instrument)
+
+                if options.exchange:
+                    hdf_file = "{}_{}".format(options.exchange, hdf_file)
+
                 hdf_file = os.path.join(dest_path, hdf_file)
+
                 if options.verbose:
                     logger.info("HDF5 File for {} : {}".format(instrument,
                                                                hdf_file))
