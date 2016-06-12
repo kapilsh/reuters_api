@@ -109,15 +109,15 @@ def trades_data(symbol=None, **kargs):
 
 class Quote(IsDescription):
     file_date = UInt32Col(dflt=0)
-    date_time = UInt64Col()
+    date_time = Int64Col()
     bid = Float64Col(dflt=np.NaN)
     ask = Float64Col(dflt=np.NaN)
-    bid_size = Int64Col(dflt=-999999)
-    ask_size = Int64Col(dflt=-999999)
+    bid_size = Int64Col(dflt=-1)
+    ask_size = Int64Col(dflt=-1)
 
 
 class Trade(IsDescription):
     file_date = UInt32Col(dflt=0)
-    date_time = UInt64Col()
+    date_time = Int64Col()
     price = Float64Col(dflt=np.NaN)
-    volume = Int64Col(dflt=-999999)
+    volume = Int64Col(dflt=-1)
