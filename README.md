@@ -163,11 +163,7 @@ DateTime
 
 ### Configuration
 
-Default configuration is provided with package distribution.
-
-`json` config can be found in `pyreuters/resources`
-
-These config files can be changed to have user's own settings before/after install.
+Default configuration is provided with package distribution. `json` config can be found in `pyreuters/resources`. These config files can be changed to have user's own settings before/after install.
 
 ###### server_config.json
 
@@ -191,9 +187,10 @@ Change settings for server and local machine.
 }
 ```
 
-Allows user to save symbol specific market data files with actual exchange symbols and not the `RIC` code
 
 ###### symbols.json
+
+Allows user to save symbol specific market data files with actual exchange symbols and not the `RIC` code
 
 ```
 {
