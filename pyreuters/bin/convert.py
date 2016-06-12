@@ -7,6 +7,7 @@ import os
 import re
 import json
 
+from pyreuters.clean import clean_quotes, clean_trades
 from ..data import Quote, Trade, read_raw, quotes_data, trades_data
 from .. import reuters_data_dir, hdf5_dir, hdf_repos_filters, symbols
 
@@ -40,6 +41,9 @@ def main():
     parser.add_argument("-e", "--exchange",
                         help="Add exchange acronym in hdf5 filename",
                         action="store", type=str, dest="exchange")
+    parser.add_argument("-c", "--clean",
+                        help="Clean the market data before saving",
+                        action="store_true", dest="clean")
     parser.add_argument("-r", "--raw_path",
                         help="Path with dated folders for tick data",
                         action="store", type=str, dest="data_path")
@@ -136,6 +140,8 @@ def main():
                                             verbose=options.verbose,
                                             logger=logger)
                         quotes = quotes_data(raw_data=raw_data)
+                        if options.clean:
+                            quotes = clean_quotes(quotes)
                         num_rows = len(quotes.index)
                         if options.verbose:
                             logger.info("Adding {} new quotes to {}".format(
@@ -184,6 +190,8 @@ def main():
                                                 logger=logger)
 
                         trades = trades_data(raw_data=raw_data)
+                        if options.clean:
+                            trades = clean_trades(trades)
                         num_rows = len(trades.index)
                         if options.verbose:
                             logger.info("Adding {} new trades to {}".format(
