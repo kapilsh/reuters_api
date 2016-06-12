@@ -20,6 +20,7 @@ for symbols
 - [x]  Functions to clean quotes and trades data
 - [x]  `Symbol` API to load market data for a particular symbol, and merge quotes and trades data
 - [ ] Comprehensive documentation
+
 -------------------------
 
 ### Command Line Tools
