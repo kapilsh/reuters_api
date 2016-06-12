@@ -163,7 +163,20 @@ DateTime
 
 ### Configuration
 
+Default configuration is provided with package distribution.
+
+`json` config can be found in `pyreuters/resources`
+
+These config files can be changed to have user's own settings before/after install.
+
 ###### server_config.json
+
+Change settings for server and local machine.
+
+- Used by `reuters_download` to point to a particular network ip.
+- Used by `reuters_convert` to access files for hdf5 conversion.
+- Provides the default directory for functions that read raw files
+
 
 ```
 {
@@ -177,6 +190,8 @@ DateTime
   }
 }
 ```
+
+Allows user to save symbol specific market data files with actual exchange symbols and not the `RIC` code
 
 ###### symbols.json
 
