@@ -16,7 +16,7 @@ It would be one and only feature release. No new features will be added afterwar
 for symbols
 2. Functions to read raw market data file, quotes and trades
 3. Functions to clean quotes and trades data
-4. `Symbol` API to read the load market data for a particular symbol
+4. `Symbol` API to load market data for a particular symbol, and merge quotes and trades data
 
 ### Command Line Tools
 
