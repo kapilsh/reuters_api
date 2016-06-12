@@ -4,6 +4,12 @@
 
 pyreuters provides an API to access reuters market data stored on a remote server.
 
+###### Version Info
+
+Release v1.0.0: v1.0.0. would be a major release.
+
+It would be one and only feature release. No new features will be added afterwards. Later versions will only be bug fixes.
+
 ### Features
 
 1. Command line tools to download data, convert to hdf5 and search remote server
