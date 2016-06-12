@@ -31,6 +31,16 @@ Navigate to the root directory of the package - the directory that has `setup.py
 $ python setup.py install
 ```
 
+###### Dependencies
+
+The package depends on:
+
+- `pandas>=0.18`
+- `numpy>=1.10`
+- `tables`
+- `pysftp`
+- `statsmodels`
+
 -------------------------
 
 ### Command Line Tools
