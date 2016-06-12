@@ -12,11 +12,11 @@ It would be one and only feature release. No new features will be added afterwar
 
 ### Features
 
-1. Command line tools to download data, convert to hdf5 and search remote server
+- [x] Command line tools to download data, convert to hdf5 and search remote server
 for symbols
-2. Functions to read raw market data file, quotes and trades
-3. Functions to clean quotes and trades data
-4. `Symbol` API to load market data for a particular symbol, and merge quotes and trades data
+- [x]  Functions to read raw market data file, quotes and trades
+- [ ]  Functions to clean quotes and trades data
+- [ ]  `Symbol` API to load market data for a particular symbol, and merge quotes and trades data
 
 ### Command Line Tools
 
