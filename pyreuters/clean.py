@@ -75,19 +75,19 @@ def __non_zero_price(row):
 
 def rm_large_spreads(quotes, func=np.median, mult=50):
     __check_quotes__(quotes)
-    temp = quotes.ffill()
-    original_count = len(quotes.index)
+    temp = quotes.ffill().bfill()
+    original_count = len(quotes)
     spreads = temp.ask - temp.bid
     indicator = func(spreads)
     to_keep = spreads <= mult*indicator
     quotes = quotes.ix[to_keep]
-    final_count = len(quotes.index)
+    final_count = len(quotes)
     print("Removed {} large spread quotes".format(original_count - final_count))
     return quotes
 
 
 def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
-                      filter_type='standard'):
+                      filter_type='advanced'):
     __check_quotes__(quotes)
     original_count = len(quotes.index)
     cleaned_qd = quotes
@@ -125,7 +125,7 @@ def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
             def __closest_to_mid_quote__(qq):
                 qq[np.isnan(qq)] = qq[3]
                 diff = np.abs(qq[0:2] - qq[3])
-                select = np.min(diff) == diff
+                select = np.where(np.min(diff) == diff)
                 value = qq[select]
                 if len(value) > 1:
                     value = np.median(value)
@@ -133,14 +133,10 @@ def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
 
             all_matrix = np.zeros((len(mid_quotes), 4))
             all_matrix[:, 0] = meds
-            all_matrix[:, 1] = pd.rolling_apply(mid_quotes,
-                                                window=2*window + 1,
-                                                func=__forward_median__,
-                                                center=True)
-            all_matrix[:, 2] = pd.rolling_apply(mid_quotes,
-                                                window=2*window + 1,
-                                                func=__backward_median__,
-                                                center=True)
+            all_matrix[:, 1] = mid_quotes.rolling(
+                window=2*window + 1, center=True).apply(__forward_median__)
+            all_matrix[:, 2] = mid_quotes.rolling(
+                window=2*window + 1, center=True).apply(__backward_median__)
             all_matrix[:, 3] = mid_quotes
             roll_meds = np.apply_along_axis(__closest_to_mid_quote__,
                                             axis=1, arr=all_matrix)
@@ -151,7 +147,7 @@ def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
         max_condition = np.less(mid_quotes.values, max_criterion)
         condition = np.logical_and(min_condition, max_condition)
         cleaned_qd = quotes.ix[condition]
-        final_count = len(cleaned_qd.index)
+        final_count = len(cleaned_qd)
     print("Removed {} outliers".format(original_count - final_count))
     return cleaned_qd
 
