@@ -5,22 +5,22 @@ from statsmodels.robust.scale import mad
 
 def __check_quotes__(qdata):
     col_names = qdata.columns
-    if not np.any(col_names == 'Bid'):
-        raise ValueError('Could not find Bid in column names')
-    if not np.any(col_names == 'Ask'):
-        raise ValueError('Could not find Ask in column names')
-    if not np.any(col_names == 'BidSize'):
-        raise ValueError('Could not find BidSize in column names')
-    if not np.any(col_names == 'AskSize'):
-        raise ValueError('Could not find AskSize in column names')
+    if not np.any(col_names == 'bid'):
+        raise ValueError('Could not find bid in column names')
+    if not np.any(col_names == 'ask'):
+        raise ValueError('Could not find ask in column names')
+    if not np.any(col_names == 'bid_size'):
+        raise ValueError('Could not find bid_size in column names')
+    if not np.any(col_names == 'ask_size'):
+        raise ValueError('Could not find ask_size in column names')
 
 
 def __check_trades__(tdata):
     col_names = tdata.columns
-    if not np.any(col_names == 'Price'):
-        raise ValueError('Could not find Price in column names')
-    if not np.any(col_names == 'Volume'):
-        raise ValueError('Could not find Volume in column names')
+    if not np.any(col_names == 'price'):
+        raise ValueError('Could not find price in column names')
+    if not np.any(col_names == 'volume'):
+        raise ValueError('Could not find volume in column names')
 
 
 def check_trades(trades):
@@ -55,9 +55,9 @@ def no_zero_quotes(quotes):
 
 
 def __non_zero_quote(row):
-    return (row.Bid != 0 and row.Ask != 0 and row.BidSize != 0 and
-            row.AskSize != 0) or (row.Bid != 0 and row.BidSize != 0) \
-           or (row.Ask != 0 and row.AskSize != 0)
+    return (row.bid != 0 and row.ask != 0 and row.bid_size != 0 and
+            row.ask_size != 0) or (row.bid != 0 and row.bid_size != 0) \
+           or (row.ask != 0 and row.ask_size != 0)
 
 
 def no_zero_prices(trades):
@@ -69,15 +69,15 @@ def no_zero_prices(trades):
 
 
 def __non_zero_price(row):
-    return not(row.Price == 0 or row.Volume == 0 or
-               np.isnan(row.Price) or np.isnan(row.Volume))
+    return not(row.price == 0 or row.volume == 0 or
+               np.isnan(row.price) or np.isnan(row.volume))
 
 
 def rm_large_spreads(quotes, func=np.median, mult=50):
     __check_quotes__(quotes)
     temp = quotes.ffill()
     original_count = len(quotes.index)
-    spreads = temp.Ask - temp.Bid
+    spreads = temp.ask - temp.bid
     indicator = func(spreads)
     to_keep = spreads <= mult*indicator
     quotes = quotes.ix[to_keep]
@@ -94,7 +94,7 @@ def rm_quote_outliers(quotes, mult=10, window=50, center=np.median,
     if original_count > window:
         window = int(np.floor(window/2) * 2)
         temp = quotes.ffill().bfill()
-        mid_quotes = (temp.Bid + temp.Ask)/2
+        mid_quotes = (temp.bid + temp.ask)/2
         mq_mad = mad(mid_quotes, center=center)
         if mq_mad == 0:
             m = mid_quotes
@@ -160,7 +160,7 @@ def rm_erroneous_quotes(quotes):
     __check_quotes__(quotes)
     original_count = len(quotes.index)
     temp = quotes.ffill()
-    quotes = quotes.ix[temp.Bid < temp.Ask]
+    quotes = quotes.ix[temp.bid < temp.ask]
     final_count = len(quotes.index)
     print("Removed {} erroneous quotes".format(original_count - final_count))
     return quotes

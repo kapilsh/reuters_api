@@ -24,9 +24,9 @@ def read_raw(symbol, date=pd.datetime.today() - BDay(1),
         logger.info("Reading market data file - {}".format(to_read))
     if os.path.exists(to_read):
         rd = pd.read_csv(to_read, compression='gzip')
-        rd['DateTime'] = pd.to_datetime(rd['Date[G]'] + " " + rd['Time[G]'],
+        rd['date_time'] = pd.to_datetime(rd['Date[G]'] + " " + rd['Time[G]'],
                                         format='%d-%b-%Y %H:%M:%S.%f')
-        rd.set_index('DateTime', inplace=True)
+        rd.set_index('date_time', inplace=True)
         return rd
     else:
         return None
@@ -64,7 +64,7 @@ def quotes_data(symbol=None, **kargs):
     if tick_data is not None:
         qd = tick_data[tick_data.Type == 'Quote']
         qd = qd[['Bid Price', 'Bid Size', 'Ask Price', 'Ask Size']]
-        qd.columns = ['Bid', 'BidSize', 'Ask', 'AskSize']
+        qd.columns = ['bid', 'bid_size', 'ask', 'ask_size']
         return qd
     else:
         return None
@@ -101,7 +101,7 @@ def trades_data(symbol=None, **kargs):
 
     if tick_data is not None:
         td = tick_data[tick_data.Type == 'Trade']
-        td = td[['Price', 'Volume']]
+        td = td[['price', 'volume']]
         return td
     else:
         return None
